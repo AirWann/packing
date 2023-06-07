@@ -3,7 +3,7 @@ from ortools.linear_solver import pywraplp
 from ortools.init import pywrapinit
 import time
 
-""" this grabs the known records of packing from a txt and puts them in an array. Not used yet. 
+""" this grabs the known records of packing from a txt and puts them in an array.
 Find the txt files here : http://hydra.nat.uni-magdeburg.de/packing/csq/csq.html """
 f = open("ratio.txt","r")
 txt = f.readlines()
@@ -37,7 +37,10 @@ print(M1,M2)
 
 print(4 * (testR*testdelta1)**2)"""
 """ """ """ """ """ """
+
+
 def bestsolutionforR(R):
+    """ grabs the best known packing of circles of radius R, using the table generated at the beginning"""
     i=0
     while tabradius[i] > R:
         i+=1
@@ -53,6 +56,7 @@ def interference(i1,j1,i2,j2,R,dens):
 def pack(R,density):
     """ creates a solver """
     # IMPORTANT # If you don't have gurobi set up, replace GUROBI_MIP with SCIP and comment the "LoadGurobiSharedLibrary" line at the very end
+    """ Gurobi is MUCH faster, but requires a license. """
     solver = pywraplp.Solver.CreateSolver('GUROBI_MIP')
     if not solver:
         return
@@ -70,11 +74,11 @@ def pack(R,density):
     """ create constraints """
     M = Pointsincircle(int(R*density)+1) * 4
     print(M)
+    """ the constraints are of the form : M(1-x_ij) >= sum_(i',j' s.t. x_ij and x_i'j' interfere) x_i'j' """
     for i in range(N):
-        #print(i)
         for j in range(N):
             constraint = solver.RowConstraint(0, M, '')
-            constraint.SetCoefficient(x[(i,j)], M)
+            constraint.SetCoefficient(x[(i,j)], M) 
             for i2 in range(N):
                 for j2 in range(N):
                     if(interference(i,j,i2,j2,R,density) and (i != i2 or j != j2)): #only points that are in the neighborhood of (i,j) appear in the constraint
@@ -116,6 +120,7 @@ def pack(R,density):
 def main():
     """ "density" is to be understood as 1/delta, with delta being the gap between neighbouring points of the grid. """
     """ "R" is the radius of the circles. """
+    """ density above 50 makes the solver insanely slow (>30mins) """
     Radius = 0.1
     pack(R=Radius,density=25)
     
