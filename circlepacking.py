@@ -132,5 +132,6 @@ if __name__ == '__main__':
     cpp_flags.logtostderr = True
     cpp_flags.log_prefix = False
     pywrapinit.CppBridge.SetFlags(cpp_flags)
+    #put the path of gurobi library here, or comment this next line if you don't have one.
     pywrapinit.CppBridge.LoadGurobiSharedLibrary('C:\gurobi952\win64\lib\gurobi95.lib')
     main()
