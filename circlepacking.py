@@ -42,7 +42,7 @@ print(4 * (testR*testdelta1)**2)"""
 def bestsolutionforR(R):
     """ grabs the best known packing of circles of radius R, using the table generated at the beginning"""
     i=0
-    while tabradius[i] > R:
+    while (tabradius[i] > R or tabradius[i] ==0):
         i+=1
     return i
 
@@ -103,7 +103,9 @@ def pack(R,density):
                 print("ERROR", v.name, v.solution_value())   
 
         print('Objective value =', solver.Objective().Value()) 
-        print('Best known number of circles of this radius : %d' % bestsolutionforR(R))
+        bestknown = bestsolutionforR(R)
+        print('Best known number of circles of this radius : %d' % bestknown)
+        print('\nRatio = %f' % solver.Objective().Value()/bestknown)
     else:
         print('The problem does not have an optimal solution.')
 
@@ -120,9 +122,8 @@ def pack(R,density):
 def main():
     """ "density" is to be understood as 1/delta, with delta being the gap between neighbouring points of the grid. """
     """ "R" is the radius of the circles. """
-    """ density above 50 makes the solver insanely slow (>30mins) """
-    Radius = 0.1
-    pack(R=Radius,density=25)
+    Radius = 0.08
+    pack(R=Radius,density=50)
     
 
 if __name__ == '__main__':

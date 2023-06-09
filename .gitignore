@@ -1,2 +1,12 @@
 .vscode/
 blabla.txt
+report/report.synctex.gz
+report/report.pdf
+report/report.run.xml
+report/report.log
+report/report.fls
+report/report.fdb_latexmk
+report/report.blg
+report/report.bcf
+report/report.bbl
+report/report.aux

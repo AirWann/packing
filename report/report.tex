@@ -1,0 +1,49 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage{biblatex} 
+\addbibresource{biblio.bib}
+\usepackage[T1]{fontenc}    % Encodage des accents
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc} % Lui aussi
+\usepackage{numprint}       % Histoire que les chiffres soient bien
+
+\usepackage{amsmath}        % La base pour les maths
+%\usepackage{mathrsfs}       % Quelques symboles supplémentaires
+%\usepackage{amsfonts}       % Des fontes, eg pour \mathbb.
+
+
+\usepackage[svgnames]{xcolor} % De la couleur
+\usepackage{geometry}       % Gérer correctement la taille
+
+\setlength{\marginparwidth}{2cm}
+\usepackage{todonotes}
+\newcommand{\till}[1]{\todo[color=red!30]{\small Till : #1}}
+\newcommand{\lucas}[1]{\todo[color=blue!30]{\small Lucas : #1}}
+\newcommand{\erwann}[1]{\todo[color=green!30]{\small Erwann : #1}}
+\usepackage{graphicx} 
+\usepackage{wrapfig}  
+\usepackage{mdframed}
+\usepackage{thmbox}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.6pt}
+\newcommand{\ul}[1]{%
+	\uline{\phantom{#1}}%
+	\llap{\contour{white}{#1}}%
+}
+\hyphenpenalty 500
+\title{Report} %still need to find a title
+\author{Erwann LOULERGUE, \\ supervised by Till MILZTOW and Lucas MEIJER}
+
+
+\begin{document}
+    \maketitle
+    \erwann{Here will be a page with some kind of abstract containing the scientific context, 
+    the question studied, etc}
+    \newpage
+
+    \section{Packing problems}
+    \subsection{Definition}
+    A 
+    
+\end{document}
