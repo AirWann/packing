@@ -1,4 +1,6 @@
 import numpy as np
+from matplotlib import pyplot as plt  
+from PIL import Image, ImageDraw
 from ortools.linear_solver import pywraplp
 from ortools.init import pywrapinit
 import time
@@ -53,7 +55,7 @@ def interference(i1,j1,i2,j2,R,dens):
 
 
 
-def pack(R,density):
+def pack(R:float,density:int,image:bool):
     """ creates a solver """
     # IMPORTANT # If you don't have gurobi set up, replace GUROBI_MIP with SCIP and comment the "LoadGurobiSharedLibrary" line at the very end
     """ Gurobi is MUCH faster, but requires a license. """
@@ -61,7 +63,11 @@ def pack(R,density):
     if not solver:
         return
     
-    N = int((1-2*R)*density) # number of points per row/column
+    
+
+
+
+    N = int((1-2*R)*density) + 1 # number of points per row/column
 
     """ create an array of variables """
     x = {}
@@ -73,8 +79,9 @@ def pack(R,density):
 
     """ create constraints """
     M = Pointsincircle(int(R*density)+1) * 4
-    print(M)
+    print("M : ", M)
     """ the constraints are of the form : M(1-x_ij) >= sum_(i',j' s.t. x_ij and x_i'j' interfere) x_i'j' """
+    print("number of points per row : ", N)
     for i in range(N):
         for j in range(N):
             constraint = solver.RowConstraint(0, M, '')
@@ -105,16 +112,42 @@ def pack(R,density):
         print('Objective value =', solver.Objective().Value()) 
         bestknown = bestsolutionforR(R)
         print('Best known number of circles of this radius : %d' % bestknown)
-        print('\nRatio = %f' % solver.Objective().Value()/bestknown)
+        #print('\nRatio = %f' % solver.Objective().Value()/bestknown)
+        if(image):
+            s=1000
+            img = Image.new('RGB', (s,s))
+            d = ImageDraw.Draw(img)
+            delta = 1 / density
+            for i in range(N):
+                for j in range(N):
+                    if x[(i, j)].solution_value() == 1:
+
+                        d.point([s*((i*delta)+R), s*((j*delta)+R)],'Red')
+                        d.ellipse([s*((i*delta)),s*((j*delta)),s*((i*delta)+2*R),s*((j*delta)+2*R)])
+                    else:
+
+                        d.point([s*((i*delta)+R), s*((j*delta)+R)],'Blue')
+            img.show()
+        else:
+            str = ''
+            for i in range(N):
+                for j in range(N):
+                    if x[(i, j)].solution_value() == 1:
+                        str += 'O'
+                    else:
+                        str += '·' 
+                str += '\n'
+            print(str)
     else:
         print('The problem does not have an optimal solution.')
 
     
-    print('\nAdvanced usage:')
+    
     print('Problem solved in %f seconds' % timetaken)
     print('Problem solved in %d iterations' % solver.iterations())
     print('Problem solved in %d branch-and-bound nodes' % solver.nodes()) 
-    
+    ratio = solver.Objective().Value()/bestknown
+    return(ratio, timetaken)
 
 
 
@@ -122,8 +155,22 @@ def pack(R,density):
 def main():
     """ "density" is to be understood as 1/delta, with delta being the gap between neighbouring points of the grid. """
     """ "R" is the radius of the circles. """
-    Radius = 0.08
-    pack(R=Radius,density=50)
+    """ expratio = np.zeros(100)
+    exptime = np.zeros(100)
+    for k in range(1,100):
+        Radius = tabradius[k]
+        expratio[k], exptime[k] = pack(R=Radius,density=30)
+    plt.subplot(2, 1, 1)
+    plt.plot(expratio)
+    plt.title('Ratio')  
+    plt.subplot(2, 1, 2) 
+    plt.plot(exptime)
+    plt.title('Solver time')
+    plt.show() """
+    
+    pack(0.11,20,True)
+    
+        
     
 
 if __name__ == '__main__':
