@@ -78,11 +78,11 @@ def pack(R:float,density:int,text:bool,s:int):
     
 
     """ create constraints """
-    M = Pointsincircle(int(R*density)+1)
-    if(text):
-        print("M : ", M)
-        """ the constraints are of the form : M(1-x_ij) >= sum_(i',j' s.t. x_ij and x_i'j' interfere) x_i'j' """
+    #M = Pointsincircle(int(R*density)+1)
+    M = 6
+    if(text): 
         print("number of points per row : ", N)
+    """ the constraints are of the form : M(1-x_ij) >= sum_(i',j' s.t. x_ij and x_i'j' interfere) x_i'j' """
     for i in range(N):
         for j in range(N):
             constraint = solver.RowConstraint(0, M, '')
@@ -120,18 +120,18 @@ def pack(R:float,density:int,text:bool,s:int):
             
             if(s > 0):
                 """ Draws the actual image. s is sizeof the image in pixels. """
-                img = Image.new('RGB', (s,s))
+                img = Image.new('RGB', (s,s), 'White')
                 d = ImageDraw.Draw(img)
                 delta = 1 / density
+                """ Size of the points. Make smaller for finer grids """
+                size = 0.001
                 for i in range(N):
                     for j in range(N):
                         if x[(i, j)].solution_value() == 1:
-
-                            d.point([s*((i*delta)+R), s*((j*delta)+R)],'Red')
-                            d.ellipse([s*((i*delta)),s*((j*delta)),s*((i*delta)+2*R),s*((j*delta)+2*R)])
+                            d.rectangle(xy=[s*((i*delta)+R-size),s*((j*delta)+R-size),s*((i*delta)+R+size),s*((j*delta)+R+size)],fill='Red',outline=None,width=1)
+                            d.ellipse([s*((i*delta)),s*((j*delta)),s*((i*delta)+2*R),s*((j*delta)+2*R)],None,'Black',2)
                         else:
-
-                            d.point([s*((i*delta)+R), s*((j*delta)+R)],'Blue')
+                            d.rectangle(xy=[s*((i*delta)+R-size),s*((j*delta)+R-size),s*((i*delta)+R+size),s*((j*delta)+R+size)],fill='Blue',outline=None,width=1)
                 img.show('Radius : %f ; Precision : %d' % (R,density) )
             else:
                 """ prints a simple grid """
@@ -163,12 +163,12 @@ def main():
     """ "R" is the radius of the circles. """
     
     """ This generates a graph of ratios and time taken for the best radiuses for 1 to 100 circles """
-    """ expratio = np.zeros(60)
-    exptime = np.zeros(60)
-    for k in range(1,60):
-        Radius = 0.009
+    """ expratio = np.zeros(100)
+    exptime = np.zeros(100)
+    for k in range(1,100):
+        Radius = tabradius[k]
         print(k)
-        expratio[k], exptime[k] = pack(R=Radius,density=k,text=False,s=0)
+        expratio[k], exptime[k] = pack(R=Radius,density=20,text=False,s=0)
     plt.subplot(2, 1, 1)
     plt.ylim(0,1)
     plt.plot(expratio)
@@ -176,8 +176,9 @@ def main():
     plt.subplot(2, 1, 2) 
     plt.plot(exptime)
     plt.title('Solver time')
-    plt.show()    """
-    pack(0.04,50,True,4000)
+    plt.show()    
+     """
+    pack(0.11,40,True,4000)
     
 
     
