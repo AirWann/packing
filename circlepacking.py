@@ -162,8 +162,9 @@ def main():
     """ "density" is to be understood as 1/delta, with delta being the gap between neighbouring points of the grid. """
     """ "R" is the radius of the circles. """
     
-    """ This generates a graph of ratios and time taken for the best radiuses for 1 to 100 circles """
-    """ expratio = np.zeros(100)
+    #This generates a graph of ratios and time taken for the best radiuses for 1 to 100 circles
+    """
+    expratio = np.zeros(100)
     exptime = np.zeros(100)
     for k in range(1,100):
         Radius = tabradius[k]
@@ -177,8 +178,9 @@ def main():
     plt.plot(exptime)
     plt.title('Solver time')
     plt.show()    
-     """
-    pack(0.11,40,True,4000)
+    """
+    #Else, you can just use the next line to do one instance but generate an image
+    pack(0.13,30,True,4000)
     
 
     
